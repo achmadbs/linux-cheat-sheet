@@ -43,18 +43,58 @@ rwxr-xr-x
 | Write | `w` | 2 | Modify file contents or create/delete entries in a directory |
 | Execute | `x` | 1 | Run a file or enter/traverse a directory |
 
-Numeric permissions are calculated per user class:
+## Single Digit Values
 
-| Number | Permission |
-| --- | --- |
-| `0` | `---` |
-| `1` | `--x` |
-| `2` | `-w-` |
-| `3` | `-wx` |
-| `4` | `r--` |
-| `5` | `r-x` |
-| `6` | `rw-` |
-| `7` | `rwx` |
+Each permission digit is the sum of read, write, and execute values for one user class.
+
+| Digit | Calculation | Permission | Meaning |
+| --- | --- | --- | --- |
+| `0` | none | `---` | No access |
+| `1` | `x` | `--x` | Execute only |
+| `2` | `w` | `-w-` | Write only |
+| `3` | `w + x` | `-wx` | Write and execute |
+| `4` | `r` | `r--` | Read only |
+| `5` | `r + x` | `r-x` | Read and execute |
+| `6` | `r + w` | `rw-` | Read and write |
+| `7` | `r + w + x` | `rwx` | Full access |
+
+Examples:
+
+```text
+7 = 4 + 2 + 1 = rwx
+6 = 4 + 2     = rw-
+5 = 4 + 1     = r-x
+4 = 4         = r--
+0 = 0         = ---
+```
+
+## Three Digit Modes
+
+A complete numeric mode has three digits:
+
+```text
+755
+| | |
+| | +-- Others
+| +---- Group
++------ Owner
+```
+
+So `755` means:
+
+| User class | Digit | Permission |
+| --- | --- | --- |
+| Owner | `7` | `rwx` |
+| Group | `5` | `r-x` |
+| Others | `5` | `r-x` |
+
+And `644` means:
+
+| User class | Digit | Permission |
+| --- | --- | --- |
+| Owner | `6` | `rw-` |
+| Group | `4` | `r--` |
+| Others | `4` | `r--` |
 
 ## Common chmod Values
 
